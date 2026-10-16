@@ -11,7 +11,6 @@ import { Reveal } from "../components/Reveal";
 import { SOLUTIONS } from "../data/site";
 import { NavPagesStack } from "../components/NavPagesStack/NavPagesStack";
 import EnterpriseTransformation from "../components/EnterpriseTransformation";
-import PricingPlans from "../components/PricingPlans/PricingPlans";
 
 const HERO_BG_NODES = [
     {
@@ -403,9 +402,6 @@ const Home = () => {
                 </div>
             </section>
 
-
-            {/* PRICING PLANS SECTION */}
-            <PricingPlans showHeader={true} showComparison={true} showFaqs={true} />
 
             <CTABand />
         </>

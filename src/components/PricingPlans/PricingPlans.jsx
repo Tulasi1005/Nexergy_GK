@@ -138,11 +138,22 @@ const FAQS = [
     },
 ];
 
-export const PricingPlans = ({ showHeader = true, showComparison = true, showFaqs = true }) => {
-    const [activePlan, setActivePlan] = useState(null);
+export const PricingPlans = ({
+    showHeader = true,
+    showComparison = true,
+    showFaqs = true,
+    initialPlan = null
+}) => {
+    const [activePlan, setActivePlan] = useState(initialPlan);
     const [currency, setCurrency] = useState("usd"); // 'usd' or 'inr'
     const [billingCycle, setBillingCycle] = useState("monthly"); // 'monthly' or 'project'
     const [expandedFaq, setExpandedFaq] = useState(null);
+
+    React.useEffect(() => {
+        if (initialPlan) {
+            setActivePlan(initialPlan);
+        }
+    }, [initialPlan]);
 
     const selectedPlan = PRICING_DATA.find((p) => p.id === activePlan) || null;
 

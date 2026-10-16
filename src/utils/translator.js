@@ -19,10 +19,26 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'zh-CN', label: 'Chinese', native: '简体中文', flag: '🇨🇳' },
 ];
 
+export const getCurrentLanguage = () => {
+  if (typeof window === 'undefined') return 'en';
+  try {
+    const stored = localStorage.getItem('gk_selected_language');
+    if (stored) return stored;
+    const cookieMatch = document.cookie.match(/googtrans=\/[^/]+\/([^;]+)/);
+    if (cookieMatch && cookieMatch[1]) return cookieMatch[1];
+  } catch (e) {}
+  return 'en';
+};
+
 export const setGlobalPageLanguage = (langCode) => {
   try {
     const code = langCode || 'en';
     localStorage.setItem('gk_selected_language', code);
+
+    // Dispatch reactive language change event for immediate component updates (TTS, Summarizer, Chatbot)
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('gk-language-changed', { detail: code }));
+    }
 
     // 1. Set Google Translate Cookie for whole-page conversion
     const domain = window.location.hostname;

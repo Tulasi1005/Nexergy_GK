@@ -325,14 +325,14 @@
     backdrop-filter: blur(8px);
     color: #e6e6e6;
 }
-/* Dark Mode Navbar and Flyout Defaults (Borderless) */
+/* Dark Mode Navbar and Flyout Defaults */
 .dark [data-testid="main-navbar"],
 .dark header[data-testid="main-navbar"] {
-    background: transparent !important;
+    background: #080e1a !important;
+    background-color: #080e1a !important;
     color: #ffffff !important;
-    border: none !important;
-    border-bottom: none !important;
-    box-shadow: none !important;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.18) !important;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 0 0 20px 0 rgba(37, 99, 235, 0.12) !important;
 }
 
 .dark [data-testid="mobile-menu"],

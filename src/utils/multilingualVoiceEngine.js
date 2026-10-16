@@ -541,12 +541,13 @@ export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {
   const detectedLang = langCode && langCode !== "auto" ? langCode : detectLanguage(speechText);
   const cleanLang = detectedLang.split("-")[0];
 
-  // Check if text contains non-Latin native script (Telugu, Hindi, Tamil, Kannada, Bengali, Arabic, etc.)
-  const hasIndicScript = /[\u0C00-\u0C7F\u0900-\u097F\u0B80-\u0BFF\u0C80-\u0CFF\u0980-\u09FF\u0600-\u06FF]/.test(speechText);
-  
-  // If the browser lacks a native TTS voice for this Indic language and text has native script,
-  // stream high-quality audio directly via Google TTS stream!
-  if (hasIndicScript && !hasNativeVoiceFor(cleanLang)) {
+  const hasNonLatinScript = /[^\u0000-\u007F]/.test(speechText);
+  const isNonEnglish = cleanLang !== "en";
+
+  // If non-English:
+  // If the browser lacks a native TTS voice for this language OR if text has non-Latin script (Telugu, Hindi, Tamil, Kannada, Bengali, Arabic, etc.),
+  // stream authentic high-fidelity audio directly via Google TTS stream!
+  if (isNonEnglish && (!hasNativeVoiceFor(cleanLang) || hasNonLatinScript)) {
     return playGoogleTTSStream(speechText, cleanLang, { onStart, onEnd, onError });
   }
 

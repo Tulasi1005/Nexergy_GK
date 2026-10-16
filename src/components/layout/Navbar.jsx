@@ -27,7 +27,7 @@ import {
 import { MEGA_COMPANY, MEGA_SOLUTIONS, MEGA_ACADEMY } from "../../data/site";
 import { SUPPORTED_LANGUAGES, setGlobalPageLanguage, getInitialLanguage } from "../../utils/translator";
 
-const Navbar = ({ theme, onToggleTheme }) => {
+const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [langModalOpen, setLangModalOpen] = useState(false);
     const [selectedLang, setSelectedLang] = useState(() => getInitialLanguage());
@@ -78,12 +78,16 @@ const Navbar = ({ theme, onToggleTheme }) => {
 
     return (
         <header
-            className="fixed top-0 inset-x-0 w-full z-50 backdrop-blur-2xl transition-all duration-300"
+            className="fixed top-0 inset-x-0 w-full z-50 backdrop-blur-2xl transition-all duration-300 dark:bg-[#080e1a]"
             data-testid="main-navbar"
             style={{
+                backgroundColor:
+                    theme === "dark"
+                        ? "#080e1a"
+                        : "#ffffff",
                 background:
                     theme === "dark"
-                        ? "linear-gradient(180deg, rgba(10, 25, 47, 0.97) 0%, rgba(7, 18, 36, 0.98) 100%)"
+                        ? "#080e1a"
                         : "#ffffff",
                 borderBottom:
                     theme === "dark"
@@ -91,7 +95,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                         : "1px solid rgba(226, 232, 240, 0.9)",
                 boxShadow:
                     theme === "dark"
-                        ? "0 4px 25px rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(37, 99, 235, 0.15)"
+                        ? "0 4px 25px rgba(0, 0, 0, 0.6), 0 0 20px 0 rgba(37, 99, 235, 0.12)"
                         : "0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03)",
             }}
         >
@@ -344,6 +348,29 @@ const Navbar = ({ theme, onToggleTheme }) => {
                             )}
                         </button>
 
+                        {/* 2.5 AI PAGE SUMMARISER QUICK BUTTON */}
+                        <button
+                            data-testid="nav-summarize-btn"
+                            onClick={() => {
+                                onOpenSummarizer?.();
+                                window.dispatchEvent(new CustomEvent('open-page-summarizer'));
+                            }}
+                            title="Summarise Current Page (Alt + S)"
+                            aria-label="Summarise Current Page"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 xs:py-2 rounded-full font-display text-xs font-bold transition-all hover:scale-105 cursor-pointer shadow-sm shrink-0"
+                            style={{
+                                backgroundColor:
+                                    theme === "dark"
+                                        ? "rgba(14, 30, 60, 0.85)"
+                                        : "rgba(241, 245, 249, 0.95)",
+                                color: theme === "dark" ? "#38bdf8" : "#0284c7",
+                                border: theme === "dark" ? "1px solid rgba(56, 189, 248, 0.25)" : "1px solid rgba(2, 132, 199, 0.2)",
+                            }}
+                        >
+                            <Sparkles className="h-3.5 w-3.5 text-sky-500 animate-pulse pointer-events-none" />
+                            <span className="inline font-bold pointer-events-none">Summarise</span>
+                        </button>
+
                         {/* 3. PRICING QUICK NAV */}
                         <Link
                             to="/pricing"
@@ -581,6 +608,21 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                     </div>
 
                                     <div className="mt-4 space-y-2">
+                                        <button
+                                            onClick={() => {
+                                                setMobileOpen(false);
+                                                onOpenSummarizer?.();
+                                                window.dispatchEvent(new CustomEvent('open-page-summarizer'));
+                                            }}
+                                            className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl border border-sky-300 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 text-sky-900 dark:text-sky-200 font-display text-xs font-bold transition-all cursor-pointer"
+                                        >
+                                            <span className="flex items-center gap-2">
+                                                <Sparkles className="h-3.5 w-3.5 text-sky-500 animate-pulse" />
+                                                <span>Summarise</span>
+                                            </span>
+                                            <Sparkles className="h-3.5 w-3.5 text-sky-500 opacity-60" />
+                                        </button>
+
                                         <button
                                             onClick={() => {
                                                 setMobileOpen(false);

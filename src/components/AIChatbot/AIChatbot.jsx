@@ -10,24 +10,17 @@ import {
   ChevronRight,
   Maximize2,
   Minimize2,
-  Key,
   ArrowDown,
+  Sparkles,
   Mic,
   MicOff,
-  Volume2,
-  VolumeX,
-  Sparkles,
 } from "lucide-react";
 import { askGKChatbot } from "../../utils/aiKnowledgeEngine";
 import {
   SpeechVoiceRecognizer,
-  speakText,
-  stopSpeaking,
   isSpeechRecognitionSupported,
-  isSpeechSynthesisSupported,
-  detectLanguage,
-  SUPPORTED_VOICE_LANGUAGES,
 } from "../../utils/multilingualVoiceEngine";
+import { getCurrentLanguage } from "../../utils/translator";
 
 // Conversation starter pills
 const STARTER_SUGGESTIONS = [
@@ -100,26 +93,12 @@ export const AIChatbot = ({ theme = "light" }) => {
   const [hasNewMessageBelow, setHasNewMessageBelow] = useState(false);
   const [chipsScrollPercent, setChipsScrollPercent] = useState(0);
 
-  // Voice Assistant States
+  // Voice Assistant States (Voice message input only, no TTS/listening option)
   const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [speakingMsgId, setSpeakingMsgId] = useState(null);
-  const [voiceEnabled, setVoiceEnabled] = useState(() => {
-    try {
-      const saved = localStorage.getItem("gk_voice_enabled");
-      return saved !== null ? saved === "true" : true;
-    } catch (e) {
-      return true;
-    }
-  });
-  const [selectedVoiceLang, setSelectedVoiceLang] = useState(() => {
-    try {
-      return localStorage.getItem("gk_chat_voice_lang") || "auto";
-    } catch (e) {
-      return "auto";
-    }
-  });
   const recognizerRef = useRef(null);
+  const speechTranscriptRef = useRef("");
+
+
 
   const chatFeedRef = useRef(null);
   const inputRef = useRef(null);
@@ -268,9 +247,6 @@ What would you like to know?`;
     e.preventDefault();
     const x = e.pageX - chipsContainerRef.current.offsetLeft;
     const walk = (x - chipsDragStartXRef.current) * 1.5;
-    if (Math.abs(walk) > 5) {
-      chipsHasDraggedRef.current = true;
-    }
     chipsContainerRef.current.scrollLeft = chipsDragScrollLeftRef.current - walk;
   };
 
@@ -278,80 +254,23 @@ What would you like to know?`;
     isDraggingChipsRef.current = false;
   };
 
-  // Clean markdown for natural text-to-speech
-  const cleanMarkdownForVoice = useCallback((text) => {
-    if (!text) return "";
-    return text
-      .replace(/\*\*(.*?)\*\*/g, "$1")
-      .replace(/\*(.*?)\*/g, "$1")
-      .replace(/#{1,6}\s+/g, "")
-      .replace(/[-•]\s+/g, "")
-      .replace(/^\d+\.\s+/g, "")
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-      .replace(/https?:\/\/\S+/g, "")
-      .replace(/`{1,3}[^`]*`{1,3}/g, "")
-      .replace(/[\n\r]+/g, " ")
-      .trim();
-  }, []);
-
-  // Voice output / Read aloud toggle for specific message
-  const toggleSpeakMessage = useCallback((msgId, text) => {
-    if (isSpeaking && speakingMsgId === msgId) {
-      stopSpeaking();
-      setIsSpeaking(false);
-      setSpeakingMsgId(null);
-      return;
-    }
-
-    stopSpeaking();
-    if (recognizerRef.current && isListening) {
-      recognizerRef.current.stop();
-      setIsListening(false);
-    }
-
-    const cleanText = cleanMarkdownForVoice(text);
-    if (!cleanText) return;
-
-    // Use explicitly selected language if not auto, otherwise detect automatically
-    const targetLang = selectedVoiceLang && selectedVoiceLang !== "auto"
-      ? selectedVoiceLang
-      : detectLanguage(cleanText);
-
-    setIsSpeaking(true);
-    setSpeakingMsgId(msgId);
-
-    speakText(cleanText, targetLang, {
-      onStart: () => {
-        setIsSpeaking(true);
-        setSpeakingMsgId(msgId);
-      },
-      onEnd: () => {
-        setIsSpeaking(false);
-        setSpeakingMsgId(null);
-      },
-      onError: () => {
-        setIsSpeaking(false);
-        setSpeakingMsgId(null);
-      },
-    });
-  }, [isSpeaking, speakingMsgId, isListening, selectedVoiceLang, cleanMarkdownForVoice]);
-
-  // Voice typing / Speech recognition toggle
+  // Voice Assistant Speech Recognition (Speech-to-Text for sending voice message)
   const toggleVoiceInput = useCallback(() => {
     if (isListening) {
       if (recognizerRef.current) {
         recognizerRef.current.stop();
       }
       setIsListening(false);
+      setTimeout(() => inputRef.current?.focus(), 80);
       return;
     }
 
-    // Stop TTS if speaking
-    if (isSpeaking) {
-      stopSpeaking();
-      setIsSpeaking(false);
-      setSpeakingMsgId(null);
+    if (!isSpeechRecognitionSupported()) {
+      alert("Voice input is not supported in this browser. Please use Google Chrome, Microsoft Edge, or Safari.");
+      return;
     }
+
+    const currentLang = getCurrentLanguage() || "auto";
 
     if (!recognizerRef.current) {
       recognizerRef.current = new SpeechVoiceRecognizer({
@@ -360,6 +279,7 @@ What would you like to know?`;
         },
         onResult: ({ transcript }) => {
           if (transcript) {
+            speechTranscriptRef.current = transcript;
             setChatInput(transcript);
           }
         },
@@ -370,52 +290,33 @@ What would you like to know?`;
           console.warn("Speech recognition error:", err);
           setIsListening(false);
         },
-        selectedLang: selectedVoiceLang,
+        selectedLang: currentLang,
       });
     } else {
-      recognizerRef.current.setLanguage(selectedVoiceLang);
+      recognizerRef.current.setLanguage(currentLang);
     }
 
+    speechTranscriptRef.current = "";
     recognizerRef.current.start();
-  }, [isListening, isSpeaking, selectedVoiceLang]);
+  }, [isListening]);
 
-  // Toggle voice auto-read aloud preference
-  const toggleVoiceAutoRead = useCallback(() => {
-    setVoiceEnabled((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem("gk_voice_enabled", String(next));
-      } catch (e) {}
-      if (!next && isSpeaking) {
-        stopSpeaking();
-        setIsSpeaking(false);
-        setSpeakingMsgId(null);
-      }
-      return next;
-    });
-  }, [isSpeaking]);
-
-  // Cleanup voice engine on unmount or when modal closes
+  // Clean up speech recognition on modal close or unmount
   useEffect(() => {
-    if (!isOpen) {
-      stopSpeaking();
-      setIsSpeaking(false);
-      setSpeakingMsgId(null);
-      if (recognizerRef.current && isListening) {
-        recognizerRef.current.stop();
-        setIsListening(false);
-      }
+    if (!isOpen && isListening && recognizerRef.current) {
+      recognizerRef.current.stop();
+      setIsListening(false);
     }
   }, [isOpen, isListening]);
 
   useEffect(() => {
     return () => {
-      stopSpeaking();
       if (recognizerRef.current) {
         recognizerRef.current.stop();
       }
     };
   }, []);
+
+
 
   // Keep feed scrolled to latest message
   useEffect(() => {
@@ -484,11 +385,6 @@ What would you like to know?`;
 
       setMessages((prev) => [...prev, botMsg]);
 
-      // Auto-read response if voice enabled
-      if (voiceEnabled) {
-        toggleSpeakMessage(botMsg.id, botMsg.text);
-      }
-
       setTimeout(() => {
         scrollToBottom("smooth");
       }, 50);
@@ -502,12 +398,8 @@ What would you like to know?`;
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, fallbackMsg]);
-
-      if (voiceEnabled) {
-        toggleSpeakMessage(fallbackMsg.id, fallbackMsg.text);
-      }
     }
-  }, [chatInput, activeTopic, messages, isListening, voiceEnabled, toggleSpeakMessage, scrollToBottom]);
+  }, [chatInput, activeTopic, messages, scrollToBottom]);
 
   // Key down event
   const handleKeyDown = (e) => {
@@ -516,6 +408,22 @@ What would you like to know?`;
       handleSend();
     }
   };
+
+  const hasManuallyClosedRef = useRef(false);
+
+  // Auto-open chatbot directly 10 seconds after opening the website
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!hasManuallyClosedRef.current) {
+        setIsOpen(true);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 200);
+      }
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global event listener for opening chatbot from anywhere
   useEffect(() => {
@@ -565,7 +473,14 @@ What would you like to know?`;
       >
         <button
           data-testid="floating-chatbot-toggle"
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={() => {
+            setIsOpen((prev) => {
+              if (prev) {
+                hasManuallyClosedRef.current = true;
+              }
+              return !prev;
+            });
+          }}
           aria-label={isOpen ? "Close GK Nexergy AI Assistant" : "GK Nexergy AI Assistant"}
           className="group relative flex items-center transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 select-none"
           style={{
@@ -738,75 +653,7 @@ What would you like to know?`;
               </div>
 
               {/* Header Controls */}
-              <div style={{ display: "flex", alignItems: "center", gap: "4px", flexShrink: 0 }}>
-                {/* Voice Auto-Read Toggle */}
-                <button
-                  data-testid="ai-voice-toggle-btn"
-                  onClick={toggleVoiceAutoRead}
-                  title={voiceEnabled ? "Voice output enabled (click to mute auto-read)" : "Voice output muted (click to enable auto-read)"}
-                  aria-label={voiceEnabled ? "Mute voice assistant" : "Unmute voice assistant"}
-                  style={{
-                    background: voiceEnabled ? (isDark ? "rgba(56, 189, 248, 0.15)" : "#e0f2fe") : "transparent",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    color: voiceEnabled ? (isDark ? "#38bdf8" : "#0284c7") : "inherit",
-                    padding: "4px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    transition: "all 0.15s ease",
-                  }}
-                >
-                  {voiceEnabled ? (
-                    <Volume2 style={{ width: "15px", height: "15px", strokeWidth: 2 }} className={isSpeaking ? "animate-pulse" : ""} />
-                  ) : (
-                    <VolumeX style={{ width: "15px", height: "15px", strokeWidth: 1.75, opacity: 0.6 }} />
-                  )}
-                </button>
-
-                {/* Compact Language Selector */}
-                <select
-                  value={selectedVoiceLang}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setSelectedVoiceLang(val);
-                    try {
-                      localStorage.setItem("gk_chat_voice_lang", val);
-                    } catch (err) {}
-                    if (recognizerRef.current) {
-                      recognizerRef.current.setLanguage(val);
-                    }
-                  }}
-                  aria-label="Select voice and recognition language"
-                  title="Voice Language (Auto, Telugu, Hindi, English, Tamil, Kannada)"
-                  style={{
-                    maxWidth: "76px",
-                    height: "26px",
-                    background: isDark ? "rgba(255, 255, 255, 0.08)" : "#f1f5f9",
-                    border: isDark ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid #cbd5e1",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    color: isDark ? "#e2e8f0" : "#0f172a",
-                    padding: "1px 3px",
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    outline: "none",
-                    fontFamily: fontStack,
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {SUPPORTED_VOICE_LANGUAGES.slice(0, 8).map((l) => (
-                    <option
-                      key={l.code}
-                      value={l.code}
-                      style={{ backgroundColor: isDark ? "#0f172a" : "#ffffff", color: isDark ? "#f8fafc" : "#0f172a" }}
-                    >
-                      {l.native}
-                    </option>
-                  ))}
-                </select>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
 
                 <button
                   data-testid="ai-clear-btn"
@@ -830,7 +677,10 @@ What would you like to know?`;
 
                 <button
                   data-testid="ai-close-btn"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    hasManuallyClosedRef.current = true;
+                    setIsOpen(false);
+                  }}
                   title="Close assistant"
                   aria-label="Close assistant"
                   style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", padding: "4px", display: "flex", alignItems: "center" }}
@@ -980,7 +830,7 @@ What would you like to know?`;
                         )}
                       </div>
 
-                      {/* Timestamp & Message Voice Tools */}
+                      {/* Timestamp */}
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "5px", paddingLeft: "4px" }}>
                         <span
                           style={{
@@ -991,34 +841,6 @@ What would you like to know?`;
                         >
                           {msg.time}
                         </span>
-
-                        {!isUser && (
-                          <button
-                            type="button"
-                            onClick={() => toggleSpeakMessage(msg.id, msg.text)}
-                            data-testid={`ai-speak-btn-${msg.id}`}
-                            aria-label={isSpeaking && speakingMsgId === msg.id ? "Stop voice playback" : "Listen to response"}
-                            title={isSpeaking && speakingMsgId === msg.id ? "Stop voice playback" : "Listen to response"}
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: "4px",
-                              background: isSpeaking && speakingMsgId === msg.id ? (isDark ? "rgba(56, 189, 248, 0.2)" : "#e0f2fe") : "transparent",
-                              border: "none",
-                              borderRadius: "4px",
-                              cursor: "pointer",
-                              padding: "2px 6px",
-                              fontSize: "11px",
-                              color: isSpeaking && speakingMsgId === msg.id ? (isDark ? "#38bdf8" : "#0284c7") : isDark ? "#64748b" : "#94a3b8",
-                              transition: "all 0.15s ease",
-                            }}
-                          >
-                            <Volume2 style={{ width: "13px", height: "13px" }} className={isSpeaking && speakingMsgId === msg.id ? "animate-pulse text-sky-500" : ""} />
-                            <span style={{ fontWeight: isSpeaking && speakingMsgId === msg.id ? 700 : 500 }}>
-                              {isSpeaking && speakingMsgId === msg.id ? "Speaking..." : "Listen"}
-                            </span>
-                          </button>
-                        )}
                       </div>
                     </motion.div>
                   );
@@ -1229,6 +1051,39 @@ What would you like to know?`;
                 flexShrink: 0,
               }}
             >
+              {/* Voice Recording Active Banner */}
+              {isListening && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "4px 10px",
+                    marginBottom: "6px",
+                    borderRadius: "8px",
+                    backgroundColor: isDark ? "rgba(239, 68, 68, 0.18)" : "#fee2e2",
+                    border: isDark ? "1px solid rgba(239, 68, 68, 0.35)" : "1px solid #fca5a5",
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    color: isDark ? "#fca5a5" : "#b91c1c",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        backgroundColor: "#ef4444",
+                      }}
+                      className="animate-ping"
+                    />
+                    <span>Listening... speak your voice message</span>
+                  </div>
+                  <span style={{ fontSize: "10px", opacity: 0.8 }}>Click mic to stop</span>
+                </div>
+              )}
+
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -1236,13 +1091,13 @@ What would you like to know?`;
                 }}
                 style={{ display: "flex", alignItems: "center", gap: "6px" }}
               >
-                {/* Voice Input Microphone Button */}
+                {/* Voice Assistant Microphone Button */}
                 <button
                   type="button"
                   onClick={toggleVoiceInput}
                   data-testid="ai-mic-btn"
-                  aria-label={isListening ? "Stop voice recording" : "Voice typing"}
-                  title={isListening ? "Listening... click to stop" : "Voice typing (speak in English, Telugu, Hindi, etc.)"}
+                  aria-label={isListening ? "Stop voice recording" : "Voice message input"}
+                  title={isListening ? "Listening... click to stop" : "Voice assistant - speak to send voice message"}
                   style={{
                     width: "38px",
                     height: "38px",

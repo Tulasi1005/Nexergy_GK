@@ -5,6 +5,7 @@ import PageHero from "../components/PageHero";
 import CTABand from "../components/CTABand";
 import FlowSteps from "../components/FlowSteps";
 import Reveal from "../components/Reveal";
+import PricingPlans from "../components/PricingPlans/PricingPlans";
 import { SOLUTIONS } from "../data/site";
 
 const SolutionDetail = () => {
@@ -102,6 +103,15 @@ const SolutionDetail = () => {
                 </Reveal>
             </section>
 
+            {/* PRICING PLANS SECTION FOR DIGITAL GROWTH */}
+            {slug === "digital-growth" && (
+                <PricingPlans
+                    showHeader={true}
+                    showComparison={true}
+                    showFaqs={true}
+                    initialPlan="growth"
+                />
+            )}
             
             <CTABand />
         </>
