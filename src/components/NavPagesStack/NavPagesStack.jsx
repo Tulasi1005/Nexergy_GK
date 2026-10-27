@@ -619,7 +619,7 @@ export const NavPagesStack = () => {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '780px', margin: '0 auto 2.5rem auto' }}>
           {/* Section Heading */}
           <h2
-            style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(1.75rem, 3.5vw, 2.85rem)', fontWeight: 800, color: isDark ? '#ffffff' : '#0F172A', lineHeight: 1.15, letterSpacing: '-0.025em', marginBottom: '0.85rem' }}
+            style={{ fontFamily: "'Manrope', sans-serif", fontSize: 'clamp(1.75rem, 3.5vw, 2.85rem)', fontWeight: 800, color: isDark ? '#ffffff' : '#0F172A', lineHeight: 1.15, letterSpacing: '-0.025em', marginBottom: '0.85rem' }}
           >
             Capabilities{' '}
             <span className="nav-stack-heading-gradient">
@@ -668,20 +668,20 @@ export const NavPagesStack = () => {
                         gap: '0.375rem',
                         padding: '0.5rem 0.75rem',
                         borderRadius: '0.75rem',
-                        fontSize: '0.75rem',
+                        fontSize: '0.875rem',
                         fontWeight: 700,
                         whiteSpace: 'nowrap',
                         cursor: 'pointer',
-                        border: isCurrent ? '1px solid #2563EB' : isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                        border: isCurrent ? '1.5px solid #2563EB' : isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
                         backgroundColor: isCurrent ? '#2563EB' : isDark ? 'rgba(255,255,255,0.04)' : '#ffffff',
-                        color: isCurrent ? '#ffffff' : isDark ? '#CBD5E1' : '#475569',
+                        color: isCurrent ? '#ffffff' : isDark ? '#ffffff' : '#0F172A',
                         boxShadow: isCurrent ? '0 4px 15px rgba(37,99,235,0.4)' : isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.05)',
                         flexShrink: 0
                       }}
                     >
                       <IconComp style={{ width: 14, height: 14 }} />
                       <span>{p.tabLabel}</span>
-                      <span style={{ fontSize: '0.625rem', fontFamily: 'monospace', marginLeft: 2, padding: '0.1rem 0.25rem', borderRadius: 4, backgroundColor: isCurrent ? 'rgba(0,0,0,0.3)' : isDark ? 'rgba(255,255,255,0.1)' : '#F1F5F9', color: isCurrent ? '#ffffff' : isDark ? '#94A3B8' : '#64748B' }}>
+                      <span style={{ fontSize: '0.675rem', fontFamily: "'Manrope', sans-serif", fontWeight: 700, marginLeft: 2, padding: '0.1rem 0.25rem', borderRadius: 4, backgroundColor: isCurrent ? 'rgba(0,0,0,0.3)' : isDark ? 'rgba(255,255,255,0.1)' : '#F1F5F9', color: isCurrent ? '#ffffff' : isDark ? '#94A3B8' : '#64748B' }}>
                         0{idx + 1}
                       </span>
                     </button>
@@ -691,7 +691,7 @@ export const NavPagesStack = () => {
 
               {/* Mobile Deck Header / Arrow Controls */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 0.5rem', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: isDark ? '#94A3B8' : '#64748B' }}>
+                <span style={{ fontSize: '0.75rem', fontFamily: "'Manrope', sans-serif", color: isDark ? '#94A3B8' : '#64748B' }}>
                   <strong style={{ color: isDark ? '#ffffff' : '#0F172A' }}>0{currentIndex + 1}</strong> / 0{total} &mdash; {currentCard.badge}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
@@ -758,7 +758,7 @@ export const NavPagesStack = () => {
                           {currentCard.category}
                         </span>
                       </div>
-                      <span style={{ fontSize: 10, fontFamily: 'monospace', fontWeight: 700, color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.65)', padding: '0.2rem 0.5rem', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <span style={{ fontSize: 10, fontFamily: "'Manrope', sans-serif", fontWeight: 700, color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.65)', padding: '0.2rem 0.5rem', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.1)' }}>
                         0{currentIndex + 1} / 0{total}
                       </span>
                     </div>
@@ -766,7 +766,7 @@ export const NavPagesStack = () => {
 
                   {/* Title & Tagline */}
                   <h3
-                    style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.15rem', fontWeight: 700, color: isDark ? '#ffffff' : '#0F172A', marginBottom: '0.25rem', lineHeight: 1.25 }}
+                    style={{ fontFamily: "'Manrope', sans-serif", fontSize: '1.15rem', fontWeight: 700, color: isDark ? '#ffffff' : '#0F172A', marginBottom: '0.25rem', lineHeight: 1.25 }}
                   >
                     {currentCard.title}
                   </h3>
@@ -836,21 +836,24 @@ export const NavPagesStack = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0' }}>
                 <div>
                   <span
-                    style={{ fontFamily: "'Outfit', sans-serif", fontSize: '11px', letterSpacing: '0.2em', color: '#2563EB', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}
+                    style={{
+                      fontFamily: "'Manrope', sans-serif",
+                      fontSize: '16px',
+                      letterSpacing: '0.06em',
+                      color: isDark ? '#38BDF8' : '#2563EB',
+                      textTransform: 'uppercase',
+                      fontWeight: 800,
+                      display: 'block',
+                    }}
                   >
                     GK NEXERGY ECOSYSTEM
-                  </span>
-                  <span
-                    style={{ fontFamily: "'Space Grotesk', monospace", fontSize: '12px', color: isDark ? '#94A3B8' : '#64748B' }}
-                  >
-                    Select or hover tabs to inspect each engineering domain
                   </span>
                 </div>
 
                 {/* Counter & Controls */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <span
-                    style={{ fontFamily: "'Space Grotesk', monospace", fontSize: '12px', color: isDark ? '#94A3B8' : '#64748B' }}
+                    style={{ fontFamily: "'Manrope', sans-serif", fontSize: '12px', fontWeight: 700, color: isDark ? '#94A3B8' : '#64748B' }}
                   >
                     <strong style={{ color: isDark ? '#ffffff' : '#0F172A', fontSize: '14px' }}>0{currentIndex + 1}</strong> / 0{total}
                   </span>
@@ -880,7 +883,7 @@ export const NavPagesStack = () => {
                 {pagesData.slice(1).map((card, offsetIdx) => {
                   const cardIdx = offsetIdx + 1;
                   const isSelected = currentIndex === cardIdx;
-                  const xOffset = cardIdx * 52; // 52px right step per card
+                  const xOffset = cardIdx * 58; // 58px right step per card
                   const yOffset = isSelected ? -14 : cardIdx * -3;
                   const zIndex = 25 - cardIdx;
 
@@ -963,24 +966,35 @@ export const NavPagesStack = () => {
                       <div className={`nav-stack-tab-strip ${isSelected ? 'is-active' : ''}`}>
                         {/* Number Index */}
                         <span
-                          style={{ fontFamily: "'Space Grotesk', monospace", fontSize: 12, fontWeight: 700, color: isSelected ? '#2563EB' : isDark ? '#94A3B8' : '#64748B' }}
+                          style={{
+                            fontFamily: "'Manrope', sans-serif",
+                            fontSize: 14,
+                            fontWeight: 800,
+                            letterSpacing: '0.04em',
+                            color: isDark ? '#ffffff' : (isSelected ? '#2563EB' : '#0F172A'),
+                          }}
                         >
                           0{cardIdx + 1}
                         </span>
 
                         {/* Vertical Title Tab Label with "AI" or Page tag */}
-                        <span className={`nav-stack-tab-label ${isSelected ? 'is-active' : ''}`}>
+                        <span 
+                          className={`nav-stack-tab-label ${isSelected ? 'is-active' : ''}`}
+                          style={{
+                            color: isDark ? '#ffffff' : undefined,
+                          }}
+                        >
                           {card.tabLabel}
                         </span>
 
                         {/* Bottom Dot */}
                         <div
                           style={{
-                            width: 8,
-                            height: 8,
+                            width: 10,
+                            height: 10,
                             borderRadius: '50%',
-                            backgroundColor: isSelected ? '#2563EB' : isDark ? '#475569' : '#CBD5E1',
-                            boxShadow: isSelected ? '0 0 8px rgba(37,99,235,0.6)' : 'none',
+                            backgroundColor: isSelected ? (isDark ? '#60A5FA' : '#2563EB') : isDark ? 'rgba(255,255,255,0.45)' : '#CBD5E1',
+                            boxShadow: isSelected ? '0 0 10px rgba(37,99,235,0.6)' : 'none',
                             transform: isSelected ? 'scale(1.25)' : 'scale(1)',
                             transition: 'all 0.25s'
                           }}
@@ -1045,14 +1059,14 @@ export const NavPagesStack = () => {
                               />
                             </div>
                             <span
-                              style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 700, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', padding: '0.25rem 0.65rem', borderRadius: 6, border: '1px solid rgba(255,255,255,0.1)' }}
+                              style={{ fontFamily: "'Manrope', sans-serif", fontSize: 11, fontWeight: 700, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', padding: '0.25rem 0.65rem', borderRadius: 6, border: '1px solid rgba(255,255,255,0.1)' }}
                             >
                               {currentCard.category}
                             </span>
                           </div>
 
                           <span
-                            style={{ fontFamily: "'Space Grotesk', monospace", fontSize: 12, fontWeight: 700, color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', padding: '0.25rem 0.65rem', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.1)' }}
+                            style={{ fontFamily: "'Manrope', sans-serif", fontSize: 12, fontWeight: 700, color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', padding: '0.25rem 0.65rem', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.1)' }}
                           >
                             0{currentIndex + 1} / 0{total}
                           </span>
@@ -1061,7 +1075,7 @@ export const NavPagesStack = () => {
 
                       {/* Title & Tagline */}
                       <h3
-                        style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.5rem', fontWeight: 800, color: isDark ? '#ffffff' : '#0F172A', marginBottom: '0.35rem', lineHeight: 1.2 }}
+                        style={{ fontFamily: "'Manrope', sans-serif", fontSize: '1.5rem', fontWeight: 800, color: isDark ? '#ffffff' : '#0F172A', marginBottom: '0.35rem', lineHeight: 1.2 }}
                       >
                         {currentCard.title}
                       </h3>

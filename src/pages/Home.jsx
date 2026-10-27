@@ -206,7 +206,7 @@ const Home = () => {
                     </div>
 
                     {/* RIGHT CORNER: Orbiting Ecosystem Nodes */}
-                    <Reveal delay={0.2} y={0} className="hero-home-col-nodes relative z-10 flex items-center justify-center lg:justify-end w-full lg:justify-self-end order-2">
+                    <Reveal delay={0.2} y={0} className="hero-home-col-nodes relative z-30 flex items-center justify-center lg:justify-end w-full lg:justify-self-end order-2">
                         <div className="w-full overflow-visible px-2 flex justify-center lg:justify-end">
                             <Ecosystem activeIndex={activeIndex} onSelectNode={handleSelectNode} />
                         </div>

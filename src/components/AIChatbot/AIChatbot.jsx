@@ -451,7 +451,7 @@ What would you like to know?`;
     ]);
   };
 
-  const fontStack = "'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  const fontStack = "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 
   const chatbotJSX = (
     <div style={{ fontFamily: fontStack }}>
@@ -835,7 +835,7 @@ What would you like to know?`;
                         <span
                           style={{
                             fontSize: "11px",
-                            fontFamily: "'Space Grotesk', monospace",
+                            fontFamily: "'Manrope', sans-serif",
                             color: isDark ? "#64748b" : "#94a3b8",
                           }}
                         >

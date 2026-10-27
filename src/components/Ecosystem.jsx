@@ -5,7 +5,14 @@ import { ECOSYSTEM_NODES } from "../data/site";
 
 const Ecosystem = ({ activeIndex = 0, onSelectNode }) => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
-    const [tooltipPlacement, setTooltipPlacement] = useState("top");
+    const [tooltipState, setTooltipState] = useState({
+        placement: "right",
+        shiftX: 0,
+        shiftY: 0,
+        arrowX: "50%",
+        arrowY: "50%",
+        width: 240,
+    });
     const containerRef = useRef(null);
     const reduce = useReducedMotion();
     const navigate = useNavigate();
@@ -15,12 +22,109 @@ const Ecosystem = ({ activeIndex = 0, onSelectNode }) => {
         if (containerRef.current && e.currentTarget) {
             const containerRect = containerRef.current.getBoundingClientRect();
             const nodeRect = e.currentTarget.getBoundingClientRect();
-            const containerCenterY = containerRect.top + containerRect.height / 2;
+            const nodeCenterX = nodeRect.left + nodeRect.width / 2;
             const nodeCenterY = nodeRect.top + nodeRect.height / 2;
+            const screenW = window.innerWidth;
+            const screenH = window.innerHeight;
 
-            // Nodes in upper half open UPWARDS; nodes in lower half open DOWNWARDS
-            const isAbove = nodeCenterY <= containerCenterY;
-            setTooltipPlacement(isAbove ? "top" : "bottom");
+            const navbar = document.querySelector('header[data-testid="main-navbar"]') || document.querySelector('header');
+            const navbarBottom = navbar ? navbar.getBoundingClientRect().bottom : 70;
+            
+            const spaceAbove = nodeRect.top - navbarBottom;
+            const spaceBelow = screenH - nodeRect.bottom;
+            const spaceRight = screenW - nodeRect.right;
+
+            const node = ECOSYSTEM_NODES[i];
+
+            // 1. Determine optimal placement:
+            // - "Digital Growth" ("At this side I need down"): opens DOWN (bottom)
+            // - "Nexergy Academy" ("In this tool tip should be on right"): opens RIGHT
+            // - Other nodes: open DOWN (bottom) to avoid top navbar collision & prevent obscuring center globe
+            let placement = "bottom";
+            if (node?.label === "Digital Growth") {
+                // User explicitly requested: "At this side I need down"
+                placement = "bottom";
+            } else if (node?.label === "Nexergy Academy") {
+                // User explicitly requested: "In this tool tip should be on right"
+                placement = "right";
+            } else {
+                placement = "bottom";
+            }
+
+            // 2. Horizontal and vertical clamping based on placement
+            let shiftX = 0;
+            let shiftY = 0;
+            let arrowX = "50%";
+            let arrowY = "50%";
+            let tooltipWidth = 280;
+
+            if (placement === "right") {
+                const pad = screenW <= 320 ? 8 : 12;
+                const maxAllowedWidth = Math.max(160, screenW - nodeRect.right - pad - 14);
+                tooltipWidth = Math.min(screenW <= 360 ? 210 : screenW <= 640 ? 240 : 280, maxAllowedWidth);
+
+                const estimatedHalfH = screenW <= 360 ? 55 : 65;
+                const idealTop = nodeCenterY - estimatedHalfH;
+                const idealBottom = nodeCenterY + estimatedHalfH;
+
+                if (idealTop < navbarBottom + 8) {
+                    shiftY = (navbarBottom + 8) - idealTop;
+                } else if (idealBottom > screenH - 8) {
+                    shiftY = (screenH - 8) - idealBottom;
+                }
+
+                const rawArrowY = estimatedHalfH - shiftY;
+                arrowY = Math.max(16, Math.min(estimatedHalfH * 2 - 16, rawArrowY)) + "px";
+            } else if (placement === "left") {
+                const pad = screenW <= 320 ? 8 : 12;
+                const maxAllowedWidth = Math.max(160, nodeRect.left - pad - 14);
+                tooltipWidth = Math.min(screenW <= 360 ? 210 : screenW <= 640 ? 240 : 280, maxAllowedWidth);
+
+                const estimatedHalfH = screenW <= 360 ? 55 : 65;
+                const idealTop = nodeCenterY - estimatedHalfH;
+                const idealBottom = nodeCenterY + estimatedHalfH;
+
+                if (idealTop < navbarBottom + 8) {
+                    shiftY = (navbarBottom + 8) - idealTop;
+                } else if (idealBottom > screenH - 8) {
+                    shiftY = (screenH - 8) - idealBottom;
+                }
+
+                const rawArrowY = estimatedHalfH - shiftY;
+                arrowY = Math.max(16, Math.min(estimatedHalfH * 2 - 16, rawArrowY)) + "px";
+            } else {
+                // top or bottom placement
+                const pad = screenW <= 320 ? 8 : 12;
+                if (screenW <= 320) {
+                    tooltipWidth = Math.min(220, screenW - pad * 2);
+                } else if (screenW <= 480) {
+                    tooltipWidth = Math.min(240, screenW - pad * 2);
+                } else if (screenW <= 768) {
+                    tooltipWidth = 250;
+                }
+
+                const halfW = tooltipWidth / 2;
+                const idealLeft = nodeCenterX - halfW;
+                const idealRight = nodeCenterX + halfW;
+
+                if (idealLeft < pad) {
+                    shiftX = pad - idealLeft;
+                } else if (idealRight > screenW - pad) {
+                    shiftX = (screenW - pad) - idealRight;
+                }
+
+                const rawArrowPos = halfW - shiftX;
+                arrowX = Math.max(16, Math.min(tooltipWidth - 16, rawArrowPos)) + "px";
+            }
+
+            setTooltipState({
+                placement,
+                shiftX,
+                shiftY,
+                arrowX,
+                arrowY,
+                width: tooltipWidth,
+            });
         }
         setHoveredIndex(i);
         onSelectNode && onSelectNode(i);
@@ -81,8 +185,8 @@ const Ecosystem = ({ activeIndex = 0, onSelectNode }) => {
 
             {/* rotating node layer */}
             <motion.div
-                className="absolute inset-0 z-50 pointer-events-none"
-                style={{ zIndex: 50 }}
+                className="absolute inset-0 z-20 pointer-events-none"
+                style={{ zIndex: 20 }}
                 animate={reduce ? {} : { rotate: 360 }}
                 transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
             >
@@ -100,7 +204,7 @@ const Ecosystem = ({ activeIndex = 0, onSelectNode }) => {
                                 left: `${x}%`,
                                 top: `${y}%`,
                                 transform: "translate(-50%, -50%)",
-                                zIndex: hoveredIndex === i ? 100 : 20,
+                                zIndex: hoveredIndex === i ? 35 : (isActive ? 25 : 20),
                             }}
                             onClick={(e) => {
                                 handleNodeClick(e, node, i);
@@ -145,32 +249,52 @@ const Ecosystem = ({ activeIndex = 0, onSelectNode }) => {
                                 {/* Rich Responsive Interactive Floating Tooltip */}
                                 <AnimatePresence>
                                     {hoveredIndex === i && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: tooltipPlacement === "top" ? 6 : -6, scale: 0.94 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ opacity: 0, y: tooltipPlacement === "top" ? 4 : -4, scale: 0.96 }}
-                                            transition={{ duration: 0.18, ease: "easeOut" }}
-                                            className={`ecosystem-tooltip-wrapper ${tooltipPlacement === "top" ? "ecosystem-tooltip-wrapper-top" : "ecosystem-tooltip-wrapper-bottom"}`}
-                                            style={{ zIndex: 9999 }}
+                                        <div
+                                            className={`ecosystem-tooltip-wrapper ecosystem-tooltip-wrapper-${tooltipState.placement}`}
+                                            style={{
+                                                zIndex: 40,
+                                                "--tooltip-left": `calc(50% + ${tooltipState.shiftX}px)`,
+                                                "--tooltip-shift-y": `${tooltipState.shiftY}px`,
+                                                "--tooltip-width": `${tooltipState.width}px`,
+                                                "--tooltip-arrow-left": tooltipState.arrowX,
+                                                "--tooltip-arrow-top": tooltipState.arrowY,
+                                            }}
                                         >
-                                            <div
-                                                className={`ecosystem-tooltip-card ${isActive ? "ecosystem-tooltip-card-active" : ""}`}
-                                                onClick={(e) => handleNodeClick(e, node, i)}
+                                            <motion.div
+                                                initial={{
+                                                    opacity: 0,
+                                                    x: tooltipState.placement === "right" ? -8 : tooltipState.placement === "left" ? 8 : 0,
+                                                    y: tooltipState.placement === "top" ? 6 : tooltipState.placement === "bottom" ? -6 : 0,
+                                                    scale: 0.94,
+                                                }}
+                                                animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+                                                exit={{
+                                                    opacity: 0,
+                                                    x: tooltipState.placement === "right" ? -6 : tooltipState.placement === "left" ? 6 : 0,
+                                                    y: tooltipState.placement === "top" ? 4 : tooltipState.placement === "bottom" ? -4 : 0,
+                                                    scale: 0.96,
+                                                }}
+                                                transition={{ duration: 0.18, ease: "easeOut" }}
                                             >
-                                                {/* Node Name */}
-                                                <div className="ecosystem-tooltip-title">
-                                                    {node.label}
+                                                <div
+                                                    className={`ecosystem-tooltip-card ${isActive ? "ecosystem-tooltip-card-active" : ""}`}
+                                                    onClick={(e) => handleNodeClick(e, node, i)}
+                                                >
+                                                    {/* Node Name */}
+                                                    <div className="ecosystem-tooltip-title">
+                                                        {node.label}
+                                                    </div>
+
+                                                    {/* Description */}
+                                                    <p className="ecosystem-tooltip-desc">
+                                                        {node.desc}
+                                                    </p>
+
+                                                    {/* Small Triangle Arrow */}
+                                                    <div className="ecosystem-tooltip-arrow" />
                                                 </div>
-
-                                                {/* Description */}
-                                                <p className="ecosystem-tooltip-desc">
-                                                    {node.desc}
-                                                </p>
-
-                                                {/* Small Triangle */}
-                                                <div className="ecosystem-tooltip-arrow" />
-                                            </div>
-                                        </motion.div>
+                                            </motion.div>
+                                        </div>
                                     )}
                                 </AnimatePresence>
                             </motion.div>

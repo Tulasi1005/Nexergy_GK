@@ -80,7 +80,7 @@
   border-radius: 100px;
   border: 1px solid rgba(59, 130, 246, 0.22);
   margin-bottom: 16px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 
 .dark .section-label {
@@ -90,7 +90,7 @@
 }
 
 .careers-hero-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: clamp(30px, 5.5vw, 54px);
   font-weight: 800;
   letter-spacing: -1.5px;
@@ -163,7 +163,7 @@
 .stat-number {
   font-size: 24px;
   font-weight: 800;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   display: block;
   line-height: 1.2;
   margin-bottom: 6px;
@@ -196,7 +196,7 @@
 }
 
 .listings-header h2 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: clamp(26px, 4vw, 36px);
   font-weight: 800;
   color: var(--careers-title);
@@ -267,7 +267,7 @@
 }
 
 .job-info h3 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: var(--careers-title);
@@ -327,7 +327,7 @@
   color: #ffffff !important;
   font-size: 13.5px;
   font-weight: 700;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -408,7 +408,7 @@
 }
 
 .verification-text h2 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 26px;
   font-weight: 800;
   color: var(--careers-title);
@@ -488,7 +488,7 @@
 }
 
 .app-modal-header h3 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: var(--careers-title);
@@ -538,7 +538,7 @@
   font-size: 12.5px;
   font-weight: 700;
   color: var(--careers-title);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 
 .modal-form-group input,

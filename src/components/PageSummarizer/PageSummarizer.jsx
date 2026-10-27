@@ -498,7 +498,7 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
     window.dispatchEvent(new CustomEvent("open-gk-chatbot"));
   }, []);
 
-  const fontStack = "'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  const fontStack = "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 
   return (
     <div style={{ fontFamily: fontStack }}>

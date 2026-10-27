@@ -371,14 +371,13 @@ export const EnterpriseTransformation = () => {
                                                 PHASE {activePhase.stepNum} • {activePhase.phaseSubtitle}
                                             </span>
 
-                                            <div className="et-acceleration-box">
-                                                <span className="et-acc-label">
-                                                    {activePhase.badgeCategory}
-                                                </span>
-                                                <span className={`et-acc-badge ${activePhase.badgeClass}`}>
-                                                    {activePhase.badgeName}
-                                                </span>
-                                            </div>
+                                            {activePhase.badgeName && (
+                                                <div className="et-acceleration-box">
+                                                    <span className={`et-acc-badge ${activePhase.badgeClass}`}>
+                                                        {activePhase.badgeName}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Icon & Title */}

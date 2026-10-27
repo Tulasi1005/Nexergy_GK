@@ -78,9 +78,10 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
 
     return (
         <header
-            className="fixed top-0 inset-x-0 w-full z-50 backdrop-blur-2xl transition-all duration-300 dark:bg-[#080e1a]"
+            className="fixed top-0 inset-x-0 w-full z-[1000] backdrop-blur-2xl transition-all duration-300 dark:bg-[#080e1a]"
             data-testid="main-navbar"
             style={{
+                zIndex: 1000,
                 backgroundColor:
                     theme === "dark"
                         ? "#080e1a"
@@ -102,19 +103,32 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
             <div className="mx-auto max-w-7xl px-2.5 xs:px-4 sm:px-6 lg:px-8">
                 
                 {/* Full-Length Header Row */}
-                <div className="flex h-14 sm:h-20 items-center justify-between gap-1.5 xs:gap-2.5 sm:gap-4">
+                <div className="flex h-15 xs:h-16 sm:h-20 items-center justify-between gap-1 xs:gap-2 sm:gap-4">
                     {/* LEFT – Brand Logo & Tag */}
-                    <div className="flex items-center gap-2 xs:gap-3 min-w-0">
+                    <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 min-w-0 shrink">
                         <Link
                             to="/"
                             data-testid="nav-logo"
-                            className="flex shrink-0 items-center transition-transform duration-200 hover:scale-[1.03]"
+                            className="navbar-logo-card flex shrink-0 items-center px-2 xs:px-2.5 sm:px-3.5 md:px-4 py-1 xs:py-1.5 sm:py-2 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                            style={
+                                theme === "dark"
+                                    ? {
+                                          backgroundColor: "#ffffff",
+                                          border: "none",
+                                          boxShadow: "0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25)",
+                                      }
+                                    : {
+                                          backgroundColor: "transparent",
+                                          border: "none",
+                                          boxShadow: "none",
+                                      }
+                            }
                         >
-                            {/* Brand Logo – dynamic for light and dark mode */}
+                            {/* Brand Logo – exact same logo & size in dark and light theme */}
                             <img
-                                src={theme === "dark" ? "/images/gklogo-dark.png" : "/images/gklogo.png"}
+                                src="/images/gklogo.png"
                                 alt="GK Nexergy Logo"
-                                className="navbar-logo h-6 xs:h-7 sm:h-9 w-auto max-w-[105px] xs:max-w-[130px] sm:max-w-none object-contain"
+                                className="navbar-logo object-contain"
                                 style={{
                                     border: "none",
                                 }}
@@ -123,11 +137,8 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                     </div>
 
                     {/* RIGHT – Actions Island */}
-                    <div className="flex shrink-0 items-center gap-1.5 xs:gap-2 sm:gap-2.5">
+                    <div className="navbar-actions-island flex shrink-0 items-center">
                         
-                        {/* ========================================================= */}
-                        {/* 1. LANGUAGE TRANSLATOR BUTTON & INTERACTIVE DEMO STUDIO   */}
-                        {/* ========================================================= */}
                         {/* ========================================================= */}
                         {/* 1. LANGUAGE TRANSLATOR BUTTON & CLEAN DROPDOWN            */}
                         {/* ========================================================= */}
@@ -137,7 +148,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                 onClick={() => setLangModalOpen((v) => !v)}
                                 aria-label="Translate Entire Website"
                                 title="Select Website Language"
-                                className={`flex h-8 xs:h-9 items-center gap-1 xs:gap-1.5 px-2 xs:px-3 sm:px-3.5 rounded-full transition-all cursor-pointer font-display text-[11px] xs:text-xs font-bold shadow-sm ${
+                                className={`navbar-btn navbar-lang-btn flex items-center font-display font-bold shadow-sm ${
                                     langModalOpen
                                         ? "bg-brand text-white shadow-brand/30 scale-[1.02]"
                                         : theme === "dark"
@@ -154,12 +165,12 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                             : "rgba(241, 245, 249, 0.95)",
                                 }}
                             >
-                                <Languages className={`h-3 xs:h-3.5 w-3 xs:w-3.5 ${langModalOpen ? "text-white" : "text-brand dark:text-blue-400"}`} />
-                                <span className="uppercase tracking-wider text-[10px] xs:text-[11px] font-extrabold flex items-center gap-1">
+                                <Languages className={`navbar-btn-icon navbar-lang-icon ${langModalOpen ? "text-white" : "text-brand dark:text-blue-400"}`} strokeWidth={2} />
+                                <span className="uppercase tracking-wider font-extrabold flex items-center gap-1">
                                     <span className="hidden xs:inline">{currentLangObj.flag}</span>
                                     <span>{selectedLang.toUpperCase()}</span>
                                 </span>
-                                <ChevronDown className={`h-2.5 xs:h-3 w-2.5 xs:w-3 transition-transform duration-200 ${langModalOpen ? "rotate-180 text-white" : "text-slate-400 dark:text-slate-500"}`} />
+                                <ChevronDown className={`navbar-btn-icon navbar-chevron-icon transition-transform duration-200 ${langModalOpen ? "rotate-180 text-white" : "text-slate-400 dark:text-slate-500"}`} strokeWidth={2} />
                             </button>
 
                             {/* Dropdown Menu - Clean attached dropdown */}
@@ -331,7 +342,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                             data-testid="theme-toggle"
                             onClick={onToggleTheme}
                             aria-label="Toggle light and dark theme"
-                            className="flex h-8 w-8 xs:h-9 xs:w-9 items-center justify-center rounded-full transition-all hover:scale-105 cursor-pointer shadow-sm shrink-0"
+                            className="navbar-btn navbar-theme-btn flex items-center justify-center font-display shadow-sm shrink-0"
                             style={{
                                 border: "none",
                                 backgroundColor:
@@ -342,9 +353,9 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                             }}
                         >
                             {theme === "dark" ? (
-                                <Sun className="h-3.5 xs:h-4 w-3.5 xs:w-4 text-amber-400" />
+                                <Sun className="navbar-btn-icon navbar-theme-icon text-amber-400" strokeWidth={2} />
                             ) : (
-                                <Moon className="h-3.5 xs:h-4 w-3.5 xs:w-4 text-slate-700" />
+                                <Moon className="navbar-btn-icon navbar-theme-icon text-slate-700" strokeWidth={2} />
                             )}
                         </button>
 
@@ -357,7 +368,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                             }}
                             title="Summarise Current Page (Alt + S)"
                             aria-label="Summarise Current Page"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 xs:py-2 rounded-full font-display text-xs font-bold transition-all hover:scale-105 cursor-pointer shadow-sm shrink-0"
+                            className="navbar-btn navbar-summarize-btn inline-flex items-center justify-center font-display font-bold shadow-sm shrink-0"
                             style={{
                                 backgroundColor:
                                     theme === "dark"
@@ -367,15 +378,15 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                 border: theme === "dark" ? "1px solid rgba(56, 189, 248, 0.25)" : "1px solid rgba(2, 132, 199, 0.2)",
                             }}
                         >
-                            <Sparkles className="h-3.5 w-3.5 text-sky-500 animate-pulse pointer-events-none" />
-                            <span className="inline font-bold pointer-events-none">Summarise</span>
+                            <Sparkles className="navbar-btn-icon navbar-summarize-icon text-sky-500 animate-pulse pointer-events-none" strokeWidth={2} />
+                            <span className="navbar-btn-label font-bold pointer-events-none">Summarise</span>
                         </button>
 
                         {/* 3. PRICING QUICK NAV */}
                         <Link
                             to="/pricing"
                             data-testid="nav-pricing-btn"
-                            className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-full font-display text-xs font-bold transition-all hover:scale-105"
+                            className="hidden xl:inline-flex h-10 lg:h-10.5 xl:h-10.5 items-center gap-1.5 lg:gap-2 px-3.5 sm:px-4 lg:px-4.5 xl:px-5 rounded-full font-display text-xs sm:text-[13px] lg:text-sm xl:text-[13.5px] font-bold transition-all hover:scale-105"
                             style={{
                                 backgroundColor:
                                     theme === "dark"
@@ -385,7 +396,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                 border: theme === "dark" ? "1px solid rgba(56, 189, 248, 0.2)" : "1px solid rgba(37, 99, 235, 0.15)",
                             }}
                         >
-                            <Sparkles className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400" />
+                            <Sparkles className="h-4 w-4 sm:h-[18px] sm:w-[18px] lg:h-[18px] lg:w-[18px] xl:h-[19px] xl:w-[19px] text-blue-500 dark:text-blue-400" strokeWidth={2} />
                             <span>Pricing Plans</span>
                         </Link>
 
@@ -393,7 +404,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                         <Link
                             to="/home#pages-stack-section"
                             data-testid="nav-stack-btn"
-                            className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full font-display text-xs font-bold transition-all hover:scale-105"
+                            className="hidden lg:inline-flex h-10 lg:h-10.5 xl:h-10.5 items-center gap-1.5 lg:gap-2 px-3.5 sm:px-4 lg:px-4.5 xl:px-5 rounded-full font-display text-xs sm:text-[13px] lg:text-sm xl:text-[13.5px] font-bold transition-all hover:scale-105"
                             style={{
                                 backgroundColor:
                                     theme === "dark"
@@ -403,7 +414,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                 border: theme === "dark" ? "1px solid rgba(56, 189, 248, 0.2)" : "1px solid rgba(37, 99, 235, 0.15)",
                             }}
                         >
-                            <Layers className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400" />
+                            <Layers className="h-4 w-4 sm:h-[18px] sm:w-[18px] lg:h-[18px] lg:w-[18px] xl:h-[19px] xl:w-[19px] text-blue-500 dark:text-blue-400" strokeWidth={2} />
                             <span>Stack of Cards</span>
                         </Link>
 
@@ -413,7 +424,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                             target="_blank"
                             rel="noopener noreferrer"
                             data-testid="nav-cta"
-                            className="group hidden md:inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2 font-display text-xs sm:text-xs font-extrabold text-white transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-[1.03] active:scale-[0.98]"
+                            className="group hidden md:inline-flex h-9 sm:h-10 lg:h-10 xl:h-10.5 items-center gap-2 rounded-full px-4 sm:px-5 lg:px-5.5 xl:px-6 font-display text-xs sm:text-xs lg:text-sm xl:text-[13.5px] font-extrabold text-white transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-[1.03] active:scale-[0.98]"
                             style={{
                                 border: "none",
                                 background: "linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #1d4ed8 100%)",
@@ -421,7 +432,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                             }}
                         >
                             <span>Start a Conversation</span>
-                            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                            <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-4 lg:w-4 xl:h-[18px] xl:w-[18px] transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2} />
                         </a>
 
                         {/* 5. HAMBURGER MENU BUTTON */}
@@ -429,7 +440,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                             data-testid="main-menu-toggle"
                             onClick={() => setMobileOpen((v) => !v)}
                             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
-                            className={`flex h-8 xs:h-9 sm:h-9.5 items-center gap-1.5 xs:gap-2 px-2.5 xs:px-3.5 sm:px-4 rounded-full transition-all cursor-pointer font-display text-[11px] xs:text-xs font-extrabold uppercase tracking-wider shadow-sm shrink-0 ${
+                            className={`navbar-btn navbar-menu-btn flex items-center justify-center font-display font-extrabold uppercase tracking-wider shadow-sm shrink-0 ${
                                 mobileOpen
                                     ? "bg-brand text-white shadow-lg shadow-brand/35 scale-[1.02]"
                                     : theme === "dark"
@@ -446,11 +457,11 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                         : "rgba(241, 245, 249, 0.95)",
                             }}
                         >
-                            <span className="hidden xs:inline">{mobileOpen ? "Close" : "Menu"}</span>
+                            <span className="navbar-btn-label">{mobileOpen ? "Close" : "Menu"}</span>
                             {mobileOpen ? (
-                                <X className="h-3.5 w-3.5" />
+                                <X className="navbar-btn-icon navbar-menu-icon" strokeWidth={2} />
                             ) : (
-                                <Menu className="h-3.5 w-3.5" />
+                                <Menu className="navbar-btn-icon navbar-menu-icon" strokeWidth={2} />
                             )}
                         </button>
                     </div>

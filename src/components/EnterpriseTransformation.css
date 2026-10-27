@@ -45,7 +45,7 @@
     width: 500px;
     height: 500px;
     border-radius: 9999px;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(8, 127, 140, 0.08) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
 }
@@ -153,7 +153,7 @@
 }
 
 .et-status-text {
-    font-family: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
+    font-family: 'Manrope', system-ui, sans-serif;
     font-size: 11.5px;
     font-weight: 700;
     text-transform: uppercase;
@@ -172,7 +172,7 @@
     font-weight: 800;
     line-height: 1.15;
     letter-spacing: -0.03em;
-    color: #0b1120;
+    color: #0f172a;
     margin: 0 0 20px 0;
 }
 
@@ -259,7 +259,7 @@
 
 .et-feature-card:hover {
     border-color: #93c5fd;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06);
+    box-shadow: 0 4px 12px rgba(8, 127, 140, 0.06);
     transform: translateY(-1px);
 }
 
@@ -361,7 +361,8 @@
 }
 
 .et-btn-secondary:hover {
-    border-color: #94a3b8;
+    border-color: #2563eb;
+    color: #2563eb !important;
     background-color: #f8fafc;
     transform: translateY(-1px);
 }
@@ -418,26 +419,26 @@
 }
 
 .et-card-header-title {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 11.5px;
-    font-weight: 700;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 13.5px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #334155;
+    letter-spacing: 0.08em;
+    color: #0f172a;
 }
 
 .dark .et-card-header-title {
-    color: #cbd5e1;
+    color: #f1f5f9;
 }
 
 .et-live-engine-badge {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 10px;
-    font-weight: 700;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 11.5px;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    padding: 2px 7px;
-    border-radius: 4px;
+    padding: 3px 9px;
+    border-radius: 6px;
     background-color: #eff6ff;
     color: #2563eb;
     border: 1px solid #dbeafe;
@@ -445,15 +446,19 @@
 
 .dark .et-live-engine-badge {
     background-color: rgba(37, 99, 235, 0.15);
-    color: #38bdf8;
+    color: #22d3ee;
     border-color: rgba(56, 189, 248, 0.3);
 }
 
 .et-card-step-counter {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 11px;
-    font-weight: 600;
-    color: #94a3b8;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.dark .et-card-step-counter {
+    color: #cbd5e1;
 }
 
 /* 4 Tabs Bar */
@@ -470,11 +475,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 10px 6px;
+    padding: 12px 8px;
     border-radius: 12px;
     background-color: #f8fafc;
-    border: 1px solid #f1f5f9;
-    color: #64748b;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
@@ -484,7 +489,7 @@
 .dark .et-tab-btn {
     background-color: #0f172a;
     border-color: #1e293b;
-    color: #94a3b8;
+    color: #cbd5e1;
 }
 
 .et-tab-btn:hover:not(.active) {
@@ -498,7 +503,7 @@
 }
 
 .et-tab-btn.active {
-    background-color: #0b1120;
+    background-color: #0f172a;
     border-color: #1e293b;
     color: #ffffff;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
@@ -517,20 +522,24 @@
 }
 
 .et-tab-num {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 11px;
-    font-weight: 700;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
 }
 
 .et-tab-btn.active .et-tab-num {
     color: #22d3ee;
 }
 
+.dark .et-tab-btn.active .et-tab-num {
+    color: #22d3ee;
+}
+
 .et-tab-label {
     font-family: 'Manrope', system-ui, sans-serif;
-    font-size: 11px;
+    font-size: 13.5px;
     font-weight: 800;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
@@ -566,19 +575,19 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 11px;
-    font-weight: 700;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
     color: #22d3ee;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
 .et-pipeline-flow-tag {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 10px;
-    font-weight: 600;
-    color: #64748b;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #cbd5e1;
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
@@ -657,17 +666,18 @@
 }
 
 .et-node-label {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 10px;
-    font-weight: 700;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 12.5px;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #64748b;
+    color: #cbd5e1;
     transition: color 0.2s ease;
 }
 
 .et-node-label.selected {
     color: #22d3ee;
+    font-weight: 900;
 }
 
 /* Phase Detail Card */
@@ -694,8 +704,8 @@
 }
 
 .et-phase-subtitle {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 11px;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 13.5px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -708,36 +718,28 @@
 
 .et-acceleration-box {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-.et-acc-label {
-    font-family: 'Space Grotesk', ui-monospace, monospace;
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #94a3b8;
+    align-items: center;
 }
 
 .et-acc-badge {
     font-family: 'Manrope', system-ui, sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-top: 2px;
+    font-size: 12.5px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    letter-spacing: 0.02em;
 }
 
 .et-acc-badge.blue {
-    background-color: #dbeafe;
-    color: #1d4ed8;
+    background-color: #eaf3ed;
+    color: #0f172a;
+    border: 1px solid #c2decb;
 }
 
 .dark .et-acc-badge.blue {
     background-color: rgba(37, 99, 235, 0.25);
-    color: #93c5fd;
+    color: #22d3ee;
+    
 }
 
 .et-detail-title-row {
@@ -762,7 +764,7 @@
 
 .et-detail-title {
     font-family: 'Manrope', system-ui, sans-serif;
-    font-size: 19px;
+    font-size: 21px;
     font-weight: 800;
     color: #0f172a;
     line-height: 1.25;
@@ -775,14 +777,15 @@
 
 .et-detail-desc {
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 13.5px;
-    line-height: 1.6;
-    color: #475569;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: #334155;
     margin: 0 0 16px 0;
+    font-weight: 500;
 }
 
 .dark .et-detail-desc {
-    color: #94a3b8;
+    color: #cbd5e1;
 }
 
 /* Feature Checkmark Pills */
@@ -802,15 +805,15 @@
 .et-check-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
+    gap: 7px;
+    padding: 6px 14px;
     border-radius: 9999px;
     background-color: #ffffff;
     border: 1px solid #e2e8f0;
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
@@ -821,8 +824,8 @@
 }
 
 .et-check-pill-icon {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
     color: #10b981;
     flex-shrink: 0;
 }
@@ -834,7 +837,7 @@
     justify-content: space-between;
     padding-top: 14px;
     border-top: 1px solid #e2e8f0;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .dark .et-detail-footer {
@@ -843,8 +846,8 @@
 
 .et-footer-meta {
     font-family: 'Inter', system-ui, sans-serif;
-    color: #64748b;
-    font-weight: 500;
+    color: #475569;
+    font-weight: 600;
 }
 
 .dark .et-footer-meta {
@@ -854,9 +857,10 @@
 .et-footer-link {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-family: 'Manrope', system-ui, sans-serif;
-    font-weight: 700;
+    font-size: 13.5px;
+    font-weight: 800;
     color: #2563eb !important;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -869,3 +873,4 @@
 .et-footer-link:hover {
     text-decoration: underline;
 }
+
